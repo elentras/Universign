@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe Universign::Document do
+  let(:signature_params) {
+    Universign::DocSignatureField.new(coordinate: [450, 130], page: 1)
+  }
+
   describe '.new' do
     it 'sets a variable + a params in Universign format' do
       [
@@ -8,6 +12,7 @@ describe Universign::Document do
         ['name',      'name',       'DocumentName'],
         ['url',       'url',        'DocumentUrl'],
         ['meta_data', 'metaData',   { data: 1 }],
+        ['doc_signature_fields', 'signatureFields', [signature_params]]
       ].each do |field|
         document = described_class.new(field[0] => field[2])
 
@@ -30,6 +35,20 @@ describe Universign::Document do
         document = described_class.new(content: File.open(file).read)
 
         expect(document.params[:content]).to be_instance_of(XMLRPC::Base64)
+      end
+    end
+
+    context 'doc_signature_fields is not a hash or an array' do
+      it 'raises an exception if not an array' do
+        expect {
+          described_class.new(doc_signature_fields: 1)
+        }.to raise_error(Universign::Document::DocSignatureFieldMustBeAnArray)
+      end
+
+      it 'raises an exception if not an array of Universign::DocSignatureField' do
+        expect {
+          described_class.new(doc_signature_fields: [{ bad_entry: 1 }])
+        }.to raise_error(Universign::Document::InvalidDocSignatureField)
       end
     end
   end
