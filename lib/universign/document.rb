@@ -12,6 +12,7 @@ module Universign
     # @option options [String] :url URL of the PDF
     # @option options [String] :name Name of the PDF
     # @option options [Hash] :meta_data Hash to join to the PDF
+    # @option options [Array<DocSignatureField>] :signature_fields A description of a visible PDF signature field.
     def initialize(options = {})
       @params = HashWithIndifferentAccess.new
 
@@ -91,6 +92,28 @@ module Universign
       params['metaData'] = data
     end
 
+    # The signature fields of the PDF document
+    #
+    # @return [Array<DocSignatureField>]
+    def doc_signature_fields
+      @doc_signature_fields ||= params['signatureFields']
+    end
+
+    def doc_signature_fields=(data)
+      if !data.is_a?(Array)
+        raise DocSignatureFieldMustBeAnArray
+      end
+
+      if data.any? { |entry| !entry.is_a?(Universign::DocSignatureField) }
+        raise InvalidDocSignatureField
+      end
+
+      data.each do |signature_fields|
+        @doc_signature_fields ||= []
+        @doc_signature_fields << signature_fields
+      end
+      params['signatureFields'] = @doc_signature_fields
+    end
     #                          _   _
     #   _____  _____ ___ _ __ | |_(_) ___  _ __  ___
     #  / _ \ \/ / __/ _ \ '_ \| __| |/ _ \| '_ \/ __|
@@ -101,6 +124,8 @@ module Universign
     class NotSigned < StandardError; end
     class MissingDocument < StandardError; end
     class MetaDataMustBeAHash < StandardError; end
+    class InvalidDocSignatureField < StandardError; end
+    class DocSignatureFieldMustBeAnArray < StandardError; end
     class DocumentURLInvalid < StandardError
       attr_accessor :url
 
