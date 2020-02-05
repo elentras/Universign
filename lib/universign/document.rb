@@ -11,6 +11,7 @@ module Universign
     # @option options [Array<Byte>] :content Content of the PDF
     # @option options [String] :url URL of the PDF
     # @option options [String] :name Name of the PDF
+    # @option options [Array<String>] :checkbox_texts strings that signers must validates for signing
     # @option options [Hash] :meta_data Hash to join to the PDF
     # @option options [Array<DocSignatureField>] :signature_fields A description of a visible PDF signature field.
     def initialize(options = {})
@@ -76,6 +77,22 @@ module Universign
       params['name'] = data
     end
 
+    # The checkboxes texts to display for the signing validity
+    #
+    # @return [Array<String>]
+    def checkbox_texts
+      @checkbox_texts ||= params['CheckBoxesTexts']
+    end
+
+    def checkbox_texts=(data)
+      if !data.is_a?(Array)
+        raise CheckBoxesTextsMustBeAnArray
+      end
+
+      @checkbox_texts         = data
+      params['CheckBoxesTexts'] = data
+    end
+
     # The meta data of the PDF document
     #
     # @return [Hash]
@@ -124,6 +141,7 @@ module Universign
     class NotSigned < StandardError; end
     class MissingDocument < StandardError; end
     class MetaDataMustBeAHash < StandardError; end
+    class CheckBoxesTextsMustBeAnArray < StandardError; end
     class InvalidDocSignatureField < StandardError; end
     class DocSignatureFieldMustBeAnArray < StandardError; end
     class DocumentURLInvalid < StandardError
