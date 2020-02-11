@@ -44,12 +44,6 @@ describe Universign::Document do
           described_class.new(doc_signature_fields: 1)
         }.to raise_error(Universign::Document::DocSignatureFieldMustBeAnArray)
       end
-
-      it 'raises an exception if not an array of Universign::DocSignatureField' do
-        expect {
-          described_class.new(doc_signature_fields: [{ bad_entry: 1 }])
-        }.to raise_error(Universign::Document::InvalidDocSignatureField)
-      end
     end
   end
 

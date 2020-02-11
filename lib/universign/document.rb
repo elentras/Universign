@@ -138,7 +138,6 @@ module Universign
     class MissingDocument < StandardError; end
     class MetaDataMustBeAHash < StandardError; end
     class CheckBoxesTextsMustBeAnArray < StandardError; end
-    class InvalidDocSignatureField < StandardError; end
     class DocSignatureFieldMustBeAnArray < StandardError; end
     class DocumentURLInvalid < StandardError
       attr_accessor :url
