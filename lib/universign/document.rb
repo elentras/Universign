@@ -121,10 +121,6 @@ module Universign
         raise DocSignatureFieldMustBeAnArray
       end
 
-      if data.any? { |entry| !entry.is_a?(Universign::DocSignatureField) }
-        raise InvalidDocSignatureField
-      end
-
       data.each do |signature_fields|
         @doc_signature_fields ||= []
         @doc_signature_fields << signature_fields
