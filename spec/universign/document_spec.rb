@@ -12,7 +12,7 @@ describe Universign::Document do
         ['name',      'name',       'DocumentName'],
         ['url',       'url',        'DocumentUrl'],
         ['meta_data', 'metaData',   { data: 1 }],
-        ['doc_signature_fields', 'signatureFields', [signature_params]]
+        ['signature_fields', 'signatureFields', [signature_params]]
       ].each do |field|
         document = described_class.new(field[0] => field[2])
 
@@ -41,7 +41,7 @@ describe Universign::Document do
     context 'doc_signature_fields is not a hash or an array' do
       it 'raises an exception if not an array' do
         expect {
-          described_class.new(doc_signature_fields: 1)
+          described_class.new(signature_fields: 1)
         }.to raise_error(Universign::Document::DocSignatureFieldMustBeAnArray)
       end
     end

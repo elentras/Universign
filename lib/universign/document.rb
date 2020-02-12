@@ -112,20 +112,20 @@ module Universign
     # The signature fields of the PDF document
     #
     # @return [Array<DocSignatureField>]
-    def doc_signature_fields
-      @doc_signature_fields ||= params['signatureFields']
+    def signature_fields
+      @signature_fields ||= params['signatureFields']
     end
 
-    def doc_signature_fields=(data)
+    def signature_fields=(data)
       if !data.is_a?(Array)
         raise DocSignatureFieldMustBeAnArray
       end
 
-      data.each do |signature_fields|
-        @doc_signature_fields ||= []
-        @doc_signature_fields << signature_fields
+      data.each do |signature_entry|
+        @signature_fields ||= []
+        @signature_fields << signature_entry
       end
-      params['signatureFields'] = @doc_signature_fields
+      params['signatureFields'] = @signature_fields
     end
     #                          _   _
     #   _____  _____ ___ _ __ | |_(_) ___  _ __  ___
