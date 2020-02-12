@@ -13,16 +13,18 @@ module Universign
     #   the default UNIVERSIGN logo. Image format must be JPG, JPEG
     #   or PNG. A recommended resolution for this image is 150x36px.
     #   The image will be resized if the image has a different resolution.
-    def initialize(coordinate:, name: nil, page:, signer_index: 0, patternName: nil, label: nil)
+    def initialize(coordinate:, name: nil, page:, signer_index: 0, pattern_name: nil, label: nil)
       @signer_index = signer_index
-      @patternName = patternName
+      @pattern_name = pattern_name
       @label = label
 
-      super(coordinate: coordinate, name: name, page: page).tap do |params|
+      @params = super(coordinate: coordinate, name: name, page: page).tap do |params|
         params[:signerIndex] = @signer_index
-        params[:patternName]  = @patternName unless @patternName.nil?
+        params[:patternName]  = @pattern_name unless @pattern_name.nil?
         params[:label]        = @label unless @label.nil?
       end
+
+      @params
     end
   end
 end

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Universign::Document do
   let(:signature_params) {
-    Universign::DocSignatureField.new(coordinate: [450, 130], page: 1)
+    { coordinate: [450, 130], page: 1, signer_index: 0 }
   }
 
   describe '.new' do
@@ -11,14 +11,23 @@ describe Universign::Document do
         # VARIABLE    # UNIVERSIGN  # VALUE
         ['name',      'name',       'DocumentName'],
         ['url',       'url',        'DocumentUrl'],
-        ['meta_data', 'metaData',   { data: 1 }],
-        ['signature_fields', 'signatureFields', [signature_params]]
-      ].each do |field|
-        document = described_class.new(field[0] => field[2])
+        ['meta_data', 'metaData',   { data: 1 }]
+      ].each do |key, universign_name, params|
+        document = described_class.new(key => params)
 
-        expect(document.params).to have_key(field[1])
-        expect(document.send(field[0])).to eql(field[2])
+        expect(document.params).to have_key(universign_name)
+        expect(document.send(key)).to eql(params)
       end
+    end
+
+    it "set signature_fields is provided in Universign format" do
+      key = 'signature_fields'
+      universign_name = 'signatureFields'
+      params = [signature_params]
+
+      document = described_class.new(key => params)
+      expect(document.params).to have_key(universign_name)
+      expect(document.send(key)).to eql([{"page"=>1, "signerIndex"=>0, "x"=>450, "y"=>130}])
     end
 
     context 'meta_data is not a hash' do

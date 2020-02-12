@@ -123,7 +123,7 @@ module Universign
 
       data.each do |signature_entry|
         @signature_fields ||= []
-        @signature_fields << Universign::SignatureField.new(signature_entry).params
+        @signature_fields << Universign::DocSignatureField.new(signature_entry).params
       end
       params['signatureFields'] = @signature_fields
     end

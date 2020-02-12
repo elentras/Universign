@@ -7,18 +7,20 @@ describe Universign::DocSignatureField do
       params = {
         coordinate: [450, 130],
         page: 1,
-        name: 'test'
+        name: 'test',
+        signer_index: 1
       }
 
       document = described_class.new(params)
+      doc_params = document.params
 
-      expect(document.params[:x]).to eq(450)
-      expect(document.params[:y]).to eq(130)
-      expect(document.params[:page]).to eq(1)
-      expect(document.params[:name]).to eq('test')
-      expect(document.params[:label]).to eq(nil)
-      expect(document.params[:signerIndex]).to eq(0)
-      expect(document.params[:patternName]).to eq(nil)
+      expect(doc_params[:x]).to eq(450)
+      expect(doc_params[:y]).to eq(130)
+      expect(doc_params[:page]).to eq(1)
+      expect(doc_params[:name]).to eq('test')
+      expect(doc_params[:label]).to eq(nil)
+      expect(doc_params[:signerIndex]).to eq(1)
+      expect(doc_params[:patternName]).to eq(nil)
     end
   end
 
