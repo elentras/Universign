@@ -11,7 +11,9 @@ module Universign
     # @option options [Array<Byte>] :content Content of the PDF
     # @option options [String] :url URL of the PDF
     # @option options [String] :name Name of the PDF
+    # @option options [Array<String>] :checkbox_texts strings that signers must validates for signing
     # @option options [Hash] :meta_data Hash to join to the PDF
+    # @option options [Array<DocSignatureField>] :signature_fields A description of a visible PDF signature field.
     def initialize(options = {})
       @params = HashWithIndifferentAccess.new
 
@@ -75,6 +77,22 @@ module Universign
       params['name'] = data
     end
 
+    # The checkboxes texts to display for the signing validity
+    #
+    # @return [Array<String>]
+    def checkbox_texts
+      @checkbox_texts ||= params['CheckBoxesTexts']
+    end
+
+    def checkbox_texts=(data)
+      if !data.is_a?(Array)
+        raise CheckBoxesTextsMustBeAnArray
+      end
+
+      @checkbox_texts         = data
+      params['CheckBoxesTexts'] = data
+    end
+
     # The meta data of the PDF document
     #
     # @return [Hash]
@@ -91,6 +109,24 @@ module Universign
       params['metaData'] = data
     end
 
+    # The signature fields of the PDF document
+    #
+    # @return [Array<DocSignatureField>]
+    def signature_fields
+      @signature_fields ||= params['signatureFields']
+    end
+
+    def signature_fields=(data)
+      if !data.is_a?(Array)
+        raise DocSignatureFieldMustBeAnArray
+      end
+
+      data.each do |signature_entry|
+        @signature_fields ||= []
+        @signature_fields << Universign::DocSignatureField.new(signature_entry).params
+      end
+      params['signatureFields'] = @signature_fields
+    end
     #                          _   _
     #   _____  _____ ___ _ __ | |_(_) ___  _ __  ___
     #  / _ \ \/ / __/ _ \ '_ \| __| |/ _ \| '_ \/ __|
@@ -101,6 +137,8 @@ module Universign
     class NotSigned < StandardError; end
     class MissingDocument < StandardError; end
     class MetaDataMustBeAHash < StandardError; end
+    class CheckBoxesTextsMustBeAnArray < StandardError; end
+    class DocSignatureFieldMustBeAnArray < StandardError; end
     class DocumentURLInvalid < StandardError
       attr_accessor :url
 
