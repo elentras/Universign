@@ -81,16 +81,16 @@ module Universign
     #
     # @return [Array<String>]
     def checkbox_texts
-      @checkbox_texts ||= params['CheckBoxesTexts']
+      @checkbox_texts ||= params['checkBoxTexts']
     end
 
     def checkbox_texts=(data)
       if !data.is_a?(Array)
-        raise CheckBoxesTextsMustBeAnArray
+        raise CheckBoxTextsMustBeAnArray
       end
 
       @checkbox_texts         = data
-      params['CheckBoxesTexts'] = data
+      params['checkBoxTexts'] = data
     end
 
     # The meta data of the PDF document
@@ -137,7 +137,7 @@ module Universign
     class NotSigned < StandardError; end
     class MissingDocument < StandardError; end
     class MetaDataMustBeAHash < StandardError; end
-    class CheckBoxesTextsMustBeAnArray < StandardError; end
+    class CheckBoxTextsMustBeAnArray < StandardError; end
     class DocSignatureFieldMustBeAnArray < StandardError; end
     class DocumentURLInvalid < StandardError
       attr_accessor :url
